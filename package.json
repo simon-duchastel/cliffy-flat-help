@@ -1,0 +1,54 @@
+{
+  "name": "cliffy-flat-help",
+  "version": "1.0.0",
+  "description": "A flat help text generator for Cliffy - shows all subcommands, arguments, and options in one view",
+  "type": "module",
+  "main": "./dist/mod.js",
+  "types": "./dist/mod.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/mod.js",
+      "types": "./dist/mod.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "cliffy",
+    "cli",
+    "help",
+    "flat",
+    "commands",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "@cliffy/command": ">=1.0.0",
+    "@cliffy/table": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@cliffy/command": "npm:@jsr/cliffy__command@^1.0.0",
+    "@cliffy/table": "npm:@jsr/cliffy__table@^1.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/cliffy-flat-help.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/cliffy-flat-help/issues"
+  },
+  "homepage": "https://github.com/yourusername/cliffy-flat-help#readme"
+}
