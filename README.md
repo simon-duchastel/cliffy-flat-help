@@ -1,6 +1,6 @@
 # Flat help for Cliffy
 
-> **Note:** This project is **unofficial and unaffiliated** with Cliffy. It is a community project created independently.
+> **Note:** This project is **unofficial and unaffiliated** with [Cliffy](cliffy.io/). It is a community project created independently.
 
 A configuration for [Cliffy](cliffy.io/docs/latest) which generates the help text (ex. --help) with information about all subcommands, their arguments, their subcommands, etc. in one big help text block at the root.
 
