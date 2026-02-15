@@ -3,7 +3,7 @@ import { Command } from '@cliffy/command';
 import { generateHelp, flatHelp } from './mod.js';
 
 describe('generateHelp', () => {
-  it('should generate help text with subcommands', () => {
+  it('should generate help text', () => {
     const cmd = new Command()
       .name('test-cli')
       .description('Test CLI')
@@ -15,40 +15,26 @@ describe('generateHelp', () => {
       .command('list', new Command()
         .description('List tasks')
         .option('-s, --status <status>', 'Filter by status')
-      )
-      .command('delete', new Command()
-        .description('Delete a task')
-        .arguments('<id>')
       );
 
     const helpText = generateHelp(cmd);
 
-    // Check that the basic structure is present
-    expect(helpText).toContain('Usage: test-cli [options] [command]');
-    expect(helpText).toContain('Test CLI');
-    expect(helpText).toContain('Commands:');
-    
-    // Check for command names
-    expect(helpText).toContain('create');
-    expect(helpText).toContain('list');
-    expect(helpText).toContain('delete');
-    
-    // Check for arguments
-    expect(helpText).toContain('<title>');
-    expect(helpText).toContain('[description]');
-    expect(helpText).toContain('Task description');
-    expect(helpText).toContain('<id>');
-    
-    // Check for options
-    expect(helpText).toContain('-s, --status');
-    expect(helpText).toContain('Filter by status');
-    
-    // Check for required/optional markers
-    expect(helpText).toContain('(Required)');
-    expect(helpText).toContain('(Optional)');
+    const expected = `Usage: test-cli [options] [command]
+
+Test CLI
+
+Commands:
+  create <title> [description] Create a task              
+    <title>                    (Required)                 
+    [description]              (Optional) Task description
+                                                          
+  list                         List tasks                 
+    -s, --status               Filter by status           `;
+
+    expect(helpText).toBe(expected);
   });
 
-  it('should handle CLI with no subcommands', () => {
+  it('should handle no subcommands', () => {
     const cmd = new Command()
       .name('simple-cli')
       .description('Simple CLI with no commands')
@@ -70,9 +56,14 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    expect(helpText).toContain('Usage: no-desc [options] [command]');
-    expect(helpText).toContain('Commands:');
-    expect(helpText).toContain('test');
+    const expected = `Usage: no-desc [options] [command]
+
+
+
+Commands:
+  test  Test command`;
+
+    expect(helpText).toBe(expected);
   });
 
   it('should handle command with multiple arguments', () => {
@@ -88,11 +79,17 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    expect(helpText).toContain('<source>');
-    expect(helpText).toContain('<destination>');
-    expect(helpText).toContain('[options]');
-    expect(helpText).toContain('Destination path');
-    expect(helpText).toContain('Additional options');
+    const expected = `Usage: multi-arg [options] [command]
+
+CLI with multiple args
+
+Commands:
+  copy <source> <destination> [options] Copy files                   
+    <source>                            (Required)                   
+    <destination>                       (Required) Destination path  
+    [options]                           (Optional) Additional options`;
+
+    expect(helpText).toBe(expected);
   });
 
   it('should handle command with multiple options', () => {
@@ -108,12 +105,17 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    expect(helpText).toContain('-p, --port');
-    expect(helpText).toContain('Port number');
-    expect(helpText).toContain('-h, --host');
-    expect(helpText).toContain('Host address');
-    expect(helpText).toContain('-d, --debug');
-    expect(helpText).toContain('Enable debug mode');
+    const expected = `Usage: multi-opt [options] [command]
+
+CLI with multiple options
+
+Commands:
+  run           Run process      
+    -p, --port  Port number      
+    -h, --host  Host address     
+    -d, --debug Enable debug mode`;
+
+    expect(helpText).toBe(expected);
   });
 
   it('should handle nested commands (only shows direct children)', () => {
@@ -129,11 +131,14 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    // Should show "child" (the command name in parent), not "nested" (the name of the nested command itself)
-    expect(helpText).toContain('child');
-    expect(helpText).toContain('Nested command');
-    // But not its subcommand (that's expected behavior - flatHelp shows direct children)
-    expect(helpText).not.toContain('sub');
+    const expected = `Usage: parent [options] [command]
+
+Parent CLI
+
+Commands:
+  child  Nested command`;
+
+    expect(helpText).toBe(expected);
   });
 });
 
@@ -147,21 +152,32 @@ describe('flatHelp', () => {
     const helpFn = flatHelp();
     const helpText = helpFn.call(cmd);
 
-    expect(helpText).toContain('Usage: flat-test [options] [command]');
-    expect(helpText).toContain('Flat help test');
-    expect(helpText).toContain('action');
+    const expected = `Usage: flat-test [options] [command]
+
+Flat help test
+
+Commands:
+  action  Perform action`;
+
+    expect(helpText).toBe(expected);
   });
 
   it('should work when used with Cliffy\'s .help() method', () => {
-    // This simulates how it would be used in real code
     const cmd = new Command()
       .name('integration')
       .description('Integration test')
       .help(flatHelp())
       .command('sub', new Command().description('Subcommand'));
 
-    // The help function should be set up
-    // In real usage, Cliffy would call this when --help is passed
-    expect(cmd).toBeDefined();
+    const helpText = generateHelp(cmd);
+
+    const expected = `Usage: integration [options] [command]
+
+Integration test
+
+Commands:
+  sub  Subcommand`;
+
+    expect(helpText).toBe(expected);
   });
 });
