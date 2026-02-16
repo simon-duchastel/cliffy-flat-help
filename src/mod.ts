@@ -1,4 +1,5 @@
 import { Table } from "@cliffy/table";
+import type { Command, Argument, Option } from "@cliffy/command";
 
 /**
  * Generates a flat help text for a Cliffy command that includes all subcommands,
@@ -25,7 +26,7 @@ import { Table } from "@cliffy/table";
  * console.log(generateHelp(cmd));
  * ```
  */
-export function generateHelp(command: any): string {
+export function generateHelp(command: Command): string {
   const lines: string[] = [];
   
   lines.push(`Usage: ${command.getName()} [options] [command]`);
@@ -41,22 +42,24 @@ export function generateHelp(command: any): string {
     for (const cmd of allCommands) {
       const name = cmd.getName();
       const args = cmd.getArguments()
-        .map((arg: any) => arg.optional ? `[${arg.name}]` : `<${arg.name}>`)
+        .map((arg: Argument & { optional?: boolean }) => arg.optional ? `[${arg.name}]` : `<${arg.name}>`)
         .join(" ");
     
       cmdRows.push([`  ${name} ${args}`, cmd.getDescription()]);
     
       const arguments_ = cmd.getArguments();
       for (const arg of arguments_) {
-        const argStr = arg.optional ? `[${arg.name}]` : `<${arg.name}>`;
+        const argOptional = (arg as Argument & { optional?: boolean }).optional;
+        const argStr = argOptional ? `[${arg.name}]` : `<${arg.name}>`;
         const description = arg.description ? ` ${arg.description}` : "";
-        const requiredText = arg.optional ? "(Optional)" : "(Required)";
+        const requiredText = argOptional ? "(Optional)" : "(Required)";
         cmdRows.push([`    ${argStr}`, requiredText + (description || "")]);
       }
 
       const opts = cmd.getOptions();
       for (const opt of opts) {
-        const flags = Array.isArray(opt.flags) ? opt.flags.join(", ") : (opt.flags || "");
+        const optWithFlags = opt as Option & { flags: string[] };
+        const flags = optWithFlags.flags.join(", ");
         const desc = opt.description || "";
         cmdRows.push([`    ${flags}`, desc]);
       }
@@ -90,8 +93,8 @@ export function generateHelp(command: any): string {
  * // Now --help will show the flat help with all subcommands
  * ```
  */
-export function flatHelp(): (this: any) => string {
-  return function(this: any): string {
+export function flatHelp(): (this: Command) => string {
+  return function(this: Command): string {
     return generateHelp(this);
   };
 }
