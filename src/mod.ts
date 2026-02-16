@@ -148,13 +148,6 @@ export function generateHelp(command: Command, config?: FlatHelpConfig): string 
  *   .command("init", new Command().description("Initialize"));
  * 
  * // Now --help will show the flat help with all subcommands
- * 
- * // Disable colors:
- * const cmdNoColors = new Command()
- *   .name("my-cli")
- *   .description("My CLI tool")
- *   .help(flatHelp({ colors: false }))
- *   .command("init", new Command().description("Initialize"));
  * ```
  */
 export function flatHelp(config?: FlatHelpConfig): (this: Command) => string {
