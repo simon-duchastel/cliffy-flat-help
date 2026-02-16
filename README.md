@@ -14,11 +14,11 @@ npm install cliffy-flat-help
 
 ## Requirements
 
-This package requires Cliffy as a peer dependency:
+This package requires Cliffy as a peer dependency. You must install the following packages in your project (use the `npm` instructions):
 
-```bash
-npm install @cliffy/command @cliffy/table
-```
+- `@cliffy/command` - [Installation](https://cliffy.io/docs/latest/command#installation)
+- `@cliffy/ansi` - [Installation](https://cliffy.io/docs/latest/ansi#installation)
+- `@cliffy/table` - [Installation](https://cliffy.io/docs/latest/table#installation)
 
 ## Usage
 
