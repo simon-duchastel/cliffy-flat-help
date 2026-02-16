@@ -1,9 +1,22 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Command } from '@cliffy/command';
+import { colors } from '@cliffy/ansi/colors';
 import { generateHelp, flatHelp } from './mod.js';
 
 describe('generateHelp', () => {
-  it('should generate help text', () => {
+  // Disable colors by default for simpler test assertions
+  beforeEach(() => {
+    colors.setColorEnabled(false);
+  });
+
+  afterEach(() => {
+    colors.setColorEnabled(true);
+  });
+
+  it('should generate help text with colors', () => {
+    // Re-enable colors for this test
+    colors.setColorEnabled(true);
+    
     const cmd = new Command()
       .name('test-cli')
       .description('Test CLI')
@@ -42,7 +55,7 @@ Test CLI
 
     const helpText = generateHelp(cmd);
 
-    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1msimple-cli\x1b[22m\x1b[39m [options] [command]
+    const expected = `Usage: simple-cli [options] [command]
 
 Simple CLI with no commands`;
 
@@ -56,12 +69,12 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1mno-desc\x1b[22m\x1b[39m [options] [command]
+    const expected = `Usage: no-desc [options] [command]
 
 
 
-\x1b[36m\x1b[1mCommands:\x1b[22m\x1b[39m
-  \x1b[33m\x1b[1mtest\x1b[22m\x1b[39m  Test command`;
+Commands:
+  test  Test command`;
 
     expect(helpText).toBe(expected);
   });
@@ -79,15 +92,15 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1mmulti-arg\x1b[22m\x1b[39m [options] [command]
+    const expected = `Usage: multi-arg [options] [command]
 
 CLI with multiple args
 
-\x1b[36m\x1b[1mCommands:\x1b[22m\x1b[39m
-  \x1b[33m\x1b[1mcopy\x1b[22m\x1b[39m \x1b[35m<source>\x1b[39m \x1b[35m<destination>\x1b[39m \x1b[90m[options]\x1b[39m Copy files                   
-    \x1b[35m<source>\x1b[39m                            \x1b[31m(Required)\x1b[39m                   
-    \x1b[35m<destination>\x1b[39m                       \x1b[31m(Required)\x1b[39m Destination path  
-    \x1b[90m[options]\x1b[39m                           \x1b[90m(Optional)\x1b[39m Additional options`;
+Commands:
+  copy <source> <destination> [options] Copy files                   
+    <source>                            (Required)                   
+    <destination>                       (Required) Destination path  
+    [options]                           (Optional) Additional options`;
 
     expect(helpText).toBe(expected);
   });
@@ -105,15 +118,15 @@ CLI with multiple args
 
     const helpText = generateHelp(cmd);
 
-    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1mmulti-opt\x1b[22m\x1b[39m [options] [command]
+    const expected = `Usage: multi-opt [options] [command]
 
 CLI with multiple options
 
-\x1b[36m\x1b[1mCommands:\x1b[22m\x1b[39m
-  \x1b[33m\x1b[1mrun\x1b[22m\x1b[39m           Run process      
-    \x1b[32m-p, --port\x1b[39m  Port number      
-    \x1b[32m-h, --host\x1b[39m  Host address     
-    \x1b[32m-d, --debug\x1b[39m Enable debug mode`;
+Commands:
+  run           Run process      
+    -p, --port  Port number      
+    -h, --host  Host address     
+    -d, --debug Enable debug mode`;
 
     expect(helpText).toBe(expected);
   });
@@ -131,20 +144,28 @@ CLI with multiple options
 
     const helpText = generateHelp(cmd);
 
-    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1mparent\x1b[22m\x1b[39m [options] [command]
+    const expected = `Usage: parent [options] [command]
 
 Parent CLI
 
-\x1b[36m\x1b[1mCommands:\x1b[22m\x1b[39m
-  \x1b[33m\x1b[1mchild\x1b[22m\x1b[39m    Nested command
+Commands:
+  child    Nested command
                          
-      \x1b[33m\x1b[1msub\x1b[22m\x1b[39m  Subcommand    `;
+      sub  Subcommand    `;
 
     expect(helpText).toBe(expected);
   });
 });
 
 describe('flatHelp', () => {
+  beforeEach(() => {
+    colors.setColorEnabled(false);
+  });
+
+  afterEach(() => {
+    colors.setColorEnabled(true);
+  });
+
   it('should work when used with Cliffy\'s .help() method', () => {
     const cmd = new Command()
       .name('integration')
@@ -154,12 +175,12 @@ describe('flatHelp', () => {
 
     const helpText = generateHelp(cmd);
 
-    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1mintegration\x1b[22m\x1b[39m [options] [command]
+    const expected = `Usage: integration [options] [command]
 
 Integration test
 
-\x1b[36m\x1b[1mCommands:\x1b[22m\x1b[39m
-  \x1b[33m\x1b[1msub\x1b[22m\x1b[39m  Subcommand`;
+Commands:
+  sub  Subcommand`;
 
     expect(helpText).toBe(expected);
   });
