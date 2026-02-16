@@ -22,9 +22,31 @@ npm install @cliffy/command @cliffy/table
 
 ## Usage
 
-Use the `flatHelp()` helper function in the `help()` function of your top-level command.
+### Run the Example
 
-## Example
+You can run the included example CLI to see cliffy-flat-help in action:
+
+```bash
+# Clone and build the project first
+git clone https://github.com/simon-duchastel/cliffy-flat-help.git
+cd cliffy-flat-help
+npm install
+npm run build
+
+# Run the example CLI with --help
+npm run example -- --help
+```
+
+Try these commands:
+
+```bash
+npm run example -- add "Buy groceries" "Pick up milk and eggs" --priority high
+npm run example -- list --all
+npm run example -- done 1
+npm run example -- delete 2 --force
+```
+
+### Code Example
 
 ```typescript
 import { Command } from "@cliffy/command";
@@ -65,11 +87,11 @@ Commands:
   init <project-name> Initialize a new project
     <project-name>    (Required)                 
     -t, --template   Project template to use    
-                                                   
+                                                    
   build               Build the project          
     -w, --watch      Watch for changes          
     -o, --output     Output directory           
-                                                   
+                                                    
   deploy [environment] Deploy to production      
     [environment]    (Optional)                 
     -f, --force      Force deployment           
