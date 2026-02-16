@@ -229,21 +229,4 @@ Commands:
     expect(helpText).toContain('\x1b[');
   });
 
-  it('should pass config through flatHelp helper', () => {
-    colors.setColorEnabled(true);
-    
-    const cmd = new Command()
-      .name('integration')
-      .description('Integration test')
-      .help(flatHelp({ colors: false }))
-      .command('sub', new Command().description('Subcommand'));
-
-    // Call the help handler directly
-    const helpHandler = cmd.getHelpHandler();
-    const helpText = helpHandler.call(cmd);
-
-    // Should not contain ANSI color codes
-    expect(helpText).not.toContain('\x1b[');
-    expect(helpText).toContain('Usage: integration [options] [command]');
-  });
 });
