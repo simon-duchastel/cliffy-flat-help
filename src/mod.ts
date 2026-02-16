@@ -1,34 +1,6 @@
 import { Table } from "@cliffy/table";
 
 /**
- * Represents a Cliffy command argument
- */
-export interface CommandArgument {
-  name: string;
-  optional?: boolean;
-  description?: string;
-}
-
-/**
- * Represents a Cliffy command option
- */
-export interface CommandOption {
-  flags: string | string[];
-  description?: string;
-}
-
-/**
- * Represents a Cliffy command (minimal interface)
- */
-export interface CliffyCommand {
-  getName(): string;
-  getDescription(): string;
-  getCommands(): CliffyCommand[];
-  getArguments(): CommandArgument[];
-  getOptions(): CommandOption[];
-}
-
-/**
  * Generates a flat help text for a Cliffy command that includes all subcommands,
  * their arguments, and options in one comprehensive view.
  * 
@@ -53,7 +25,7 @@ export interface CliffyCommand {
  * console.log(generateHelp(cmd));
  * ```
  */
-export function generateHelp(command: CliffyCommand): string {
+export function generateHelp(command: any): string {
   const lines: string[] = [];
   
   lines.push(`Usage: ${command.getName()} [options] [command]`);
@@ -69,7 +41,7 @@ export function generateHelp(command: CliffyCommand): string {
     for (const cmd of allCommands) {
       const name = cmd.getName();
       const args = cmd.getArguments()
-        .map((arg) => arg.optional ? `[${arg.name}]` : `<${arg.name}>`)
+        .map((arg: any) => arg.optional ? `[${arg.name}]` : `<${arg.name}>`)
         .join(" ");
     
       cmdRows.push([`  ${name} ${args}`, cmd.getDescription()]);
@@ -118,8 +90,8 @@ export function generateHelp(command: CliffyCommand): string {
  * // Now --help will show the flat help with all subcommands
  * ```
  */
-export function flatHelp(): (this: CliffyCommand) => string {
-  return function(this: CliffyCommand): string {
+export function flatHelp(): (this: any) => string {
+  return function(this: any): string {
     return generateHelp(this);
   };
 }
