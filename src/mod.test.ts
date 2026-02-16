@@ -19,17 +19,17 @@ describe('generateHelp', () => {
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: test-cli [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33mtest-cli\x1b[0m [options] [command]
 
 Test CLI
 
-Commands:
-  create <title> [description] Create a task              
-    <title>                    (Required)                 
-    [description]              (Optional) Task description
+\x1b[1m\x1b[36mCommands:\x1b[0m
+  \x1b[1m\x1b[33mcreate\x1b[0m \x1b[35m<title>\x1b[0m \x1b[90m[description]\x1b[0m\x1b[39m\x1b[22m Create a task              
+    \x1b[35m<title>\x1b[0m\x1b[39m                    \x1b[31m(Required)\x1b[0m\x1b[39m                 
+    \x1b[90m[description]\x1b[0m\x1b[39m              \x1b[90m(Optional)\x1b[0m Task description\x1b[39m
                                                           
-  list                         List tasks                 
-    -s, --status               Filter by status           `;
+  \x1b[1m\x1b[33mlist\x1b[0m \x1b[39m\x1b[22m                        List tasks                 
+    \x1b[32m-s, --status\x1b[0m\x1b[39m               Filter by status           `;
 
     expect(helpText).toBe(expected);
   });
@@ -42,7 +42,7 @@ Commands:
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: simple-cli [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33msimple-cli\x1b[0m [options] [command]
 
 Simple CLI with no commands`;
 
@@ -56,12 +56,12 @@ Simple CLI with no commands`;
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: no-desc [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33mno-desc\x1b[0m [options] [command]
 
 
 
-Commands:
-  test  Test command`;
+\x1b[1m\x1b[36mCommands:\x1b[0m
+  \x1b[1m\x1b[33mtest\x1b[0m \x1b[39m\x1b[22m Test command`;
 
     expect(helpText).toBe(expected);
   });
@@ -79,15 +79,15 @@ Commands:
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: multi-arg [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33mmulti-arg\x1b[0m [options] [command]
 
 CLI with multiple args
 
-Commands:
-  copy <source> <destination> [options] Copy files                   
-    <source>                            (Required)                   
-    <destination>                       (Required) Destination path  
-    [options]                           (Optional) Additional options`;
+\x1b[1m\x1b[36mCommands:\x1b[0m
+  \x1b[1m\x1b[33mcopy\x1b[0m \x1b[35m<source>\x1b[0m \x1b[35m<destination>\x1b[0m \x1b[90m[options]\x1b[0m\x1b[39m\x1b[22m Copy files                   
+    \x1b[35m<source>\x1b[0m\x1b[39m                            \x1b[31m(Required)\x1b[0m\x1b[39m                   
+    \x1b[35m<destination>\x1b[0m\x1b[39m                       \x1b[31m(Required)\x1b[0m Destination path\x1b[39m  
+    \x1b[90m[options]\x1b[0m\x1b[39m                           \x1b[90m(Optional)\x1b[0m Additional options\x1b[39m`;
 
     expect(helpText).toBe(expected);
   });
@@ -105,15 +105,15 @@ Commands:
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: multi-opt [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33mmulti-opt\x1b[0m [options] [command]
 
 CLI with multiple options
 
-Commands:
-  run           Run process      
-    -p, --port  Port number      
-    -h, --host  Host address     
-    -d, --debug Enable debug mode`;
+\x1b[1m\x1b[36mCommands:\x1b[0m
+  \x1b[1m\x1b[33mrun\x1b[0m \x1b[39m\x1b[22m          Run process      
+    \x1b[32m-p, --port\x1b[0m\x1b[39m  Port number      
+    \x1b[32m-h, --host\x1b[0m\x1b[39m  Host address     
+    \x1b[32m-d, --debug\x1b[0m\x1b[39m Enable debug mode`;
 
     expect(helpText).toBe(expected);
   });
@@ -131,14 +131,14 @@ Commands:
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: parent [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33mparent\x1b[0m [options] [command]
 
 Parent CLI
 
-Commands:
-  child    Nested command
+\x1b[1m\x1b[36mCommands:\x1b[0m
+  \x1b[1m\x1b[33mchild\x1b[0m \x1b[39m\x1b[22m   Nested command
                          
-      sub  Subcommand    `;
+      \x1b[1m\x1b[33msub\x1b[0m \x1b[39m\x1b[22m Subcommand    `;
 
     expect(helpText).toBe(expected);
   });
@@ -154,12 +154,12 @@ describe('flatHelp', () => {
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: integration [options] [command]
+    const expected = `\x1b[1m\x1b[36mUsage:\x1b[0m \x1b[1m\x1b[33mintegration\x1b[0m [options] [command]
 
 Integration test
 
-Commands:
-  sub  Subcommand`;
+\x1b[1m\x1b[36mCommands:\x1b[0m
+  \x1b[1m\x1b[33msub\x1b[0m \x1b[39m\x1b[22m Subcommand`;
 
     expect(helpText).toBe(expected);
   });
