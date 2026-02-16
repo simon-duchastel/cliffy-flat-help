@@ -14,8 +14,6 @@ function collectAllCommands(
 
   for (const cmd of commands) {
     result.push({ cmd, depth });
-
-    // Recursively collect nested commands with increased depth
     collectAllCommands(cmd, depth + 1, result);
   }
 
