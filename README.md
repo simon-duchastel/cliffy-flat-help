@@ -26,7 +26,7 @@ Use the `flatHelp()` helper function in the `help()` function of your top-level 
 
 ### Example
 
-A runnable example (`npm run example -- --help`) is available at [examples/todo-cli.ts](examples/todo-cli.ts).
+A runnable example (`npm run example -- --help`) is available at [examples/todo-cli.ts]([examples/todo-cli.t](https://github.com/simon-duchastel/cliffy-flat-help/blob/main/examples/todo-cli.ts)s).
 
 ```typescript
 import { Command } from "@cliffy/command";
