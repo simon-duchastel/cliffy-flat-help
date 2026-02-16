@@ -28,8 +28,6 @@ function collectAllCommands(
 
   for (const cmd of commands) {
     result.push({ cmd, depth });
-
-    // Recursively collect nested commands with increased depth
     collectAllCommands(cmd, depth + 1, result);
   }
 
@@ -45,11 +43,6 @@ function collectAllCommands(
  * 
  * @param command - The Cliffy command to generate help for
  * @returns A formatted help string
- * 
- * @example
- * ```typescript
- * import { Command } from "@cliffy/command";
- * import { generateHelp } from "cliffy-flat-help";
  */
 export function generateHelp(command: Command): string {
   const lines: string[] = [];

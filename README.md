@@ -24,7 +24,9 @@ npm install @cliffy/command @cliffy/table
 
 Use the `flatHelp()` helper function in the `help()` function of your top-level command.
 
-## Example
+### Example
+
+A runnable example (`npm run example -- --help`) is available at [examples/todo-cli.ts]([examples/todo-cli.t](https://github.com/simon-duchastel/cliffy-flat-help/blob/main/examples/todo-cli.ts)s).
 
 ```typescript
 import { Command } from "@cliffy/command";
@@ -65,11 +67,11 @@ Commands:
   init <project-name> Initialize a new project
     <project-name>    (Required)                 
     -t, --template   Project template to use    
-                                                   
+                                                    
   build               Build the project          
     -w, --watch      Watch for changes          
     -o, --output     Output directory           
-                                                   
+                                                    
   deploy [environment] Deploy to production      
     [environment]    (Optional)                 
     -f, --force      Force deployment           
