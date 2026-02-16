@@ -29,11 +29,7 @@ function collectAllCommands(
  * 
  * @param command - The Cliffy command to generate help for
  * @returns A formatted help string
- * 
- * @example
- * ```typescript
- * import { Command } from "@cliffy/command";
- * import { generateHelp } from "cliffy-flat-help";
+ */
 export function generateHelp(command: Command): string {
   const lines: string[] = [];
   
