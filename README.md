@@ -70,21 +70,6 @@ const cli = new Command()
 await cli.parse();
 ```
 
-#### Disabling Colors
-
-You can disable colored output by passing `{ colors: false }` to `flatHelp()`:
-
-```typescript
-const cli = new Command()
-  .name("my-cli")
-  .description("My awesome CLI tool")
-  .version("1.0.0")
-  .help(flatHelp({ colors: false }))  // Disable colors
-  .command("init", new Command()
-    .description("Initialize a new project")
-  );
-```
-
 When you run `my-cli --help`, you'll see:
 
 ```
