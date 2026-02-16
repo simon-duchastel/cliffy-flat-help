@@ -3,6 +3,17 @@ import { colors } from "@cliffy/ansi/colors";
 import type { Command, Argument, Option } from "@cliffy/command";
 
 /**
+ * Configuration options for flatHelp.
+ */
+export interface FlatHelpConfig {
+  /**
+   * Whether to use colors in the help output.
+   * Defaults to true.
+   */
+  colors?: boolean;
+}
+
+/**
  * Recursively collects all commands with their depth level.
  * Each command is shown with its name only (not full path), at the appropriate indentation.
  */
@@ -22,6 +33,29 @@ function collectAllCommands(
 }
 
 /**
+ * Helper to conditionally apply colors based on config.
+ */
+function withColors(enabled: boolean) {
+  if (enabled) {
+    return colors;
+  }
+  // Return identity functions when colors are disabled
+  const identity = (str: string) => str;
+  return {
+    bold: Object.assign(identity, {
+      cyan: identity,
+      yellow: identity,
+    }),
+    cyan: identity,
+    yellow: identity,
+    magenta: identity,
+    gray: identity,
+    red: identity,
+    green: identity,
+  };
+}
+
+/**
  * Generates a flat help text for a Cliffy command that includes all subcommands,
  * their arguments, and options in one comprehensive view.
  * 
@@ -29,12 +63,16 @@ function collectAllCommands(
  * the complete CLI structure from a single --help call.
  * 
  * @param command - The Cliffy command to generate help for
+ * @param config - Configuration options for the help output
  * @returns A formatted help string
  */
-export function generateHelp(command: Command): string {
+export function generateHelp(command: Command, config?: FlatHelpConfig): string {
+  const useColors = config?.colors ?? true;
+  const c = withColors(useColors);
+  
   const lines: string[] = [];
   
-  lines.push(`${colors.bold.cyan("Usage:")} ${colors.bold.yellow(command.getName())} [options] [command]`);
+  lines.push(`${c.bold.cyan("Usage:")} ${c.bold.yellow(command.getName())} [options] [command]`);
   lines.push("");
   lines.push(command.getDescription() || "");
   
@@ -42,7 +80,7 @@ export function generateHelp(command: Command): string {
   
   if (allCommands.length > 0) {
     lines.push("");
-    lines.push(colors.bold.cyan("Commands:"));
+    lines.push(c.bold.cyan("Commands:"));
     const cmdRows: string[][] = [];
   
     for (const { cmd, depth } of allCommands) {
@@ -50,34 +88,34 @@ export function generateHelp(command: Command): string {
       const args = cmd.getArguments()
         .map((arg: Argument & { optional?: boolean }) => {
           if (arg.optional) {
-            return colors.gray(`[${arg.name}]`);
+            return c.gray(`[${arg.name}]`);
           } else {
-            return colors.magenta(`<${arg.name}>`);
+            return c.magenta(`<${arg.name}>`);
           }
         })
         .join(" ");
 
       const indent = depth * 2;
-      const cmdNameColored = colors.bold.yellow(name);
+      const cmdNameColored = c.bold.yellow(name);
       cmdRows.push([`${"  ".repeat(1 + indent)}${cmdNameColored} ${args}`, cmd.getDescription()]);
 
       const arguments_ = cmd.getArguments();
       for (const arg of arguments_) {
         const argOptional = (arg as Argument & { optional?: boolean }).optional;
         const argStr = argOptional 
-          ? colors.gray(`[${arg.name}]`) 
-          : colors.magenta(`<${arg.name}>`);
+          ? c.gray(`[${arg.name}]`) 
+          : c.magenta(`<${arg.name}>`);
         const description = arg.description ? ` ${arg.description}` : "";
         const requiredText = argOptional 
-          ? colors.gray("(Optional)") 
-          : colors.red("(Required)");
+          ? c.gray("(Optional)") 
+          : c.red("(Required)");
         cmdRows.push([`${"  ".repeat(2 + indent)}${argStr}`, requiredText + (description || "")]);
       }
 
       const opts = cmd.getOptions();
       for (const opt of opts) {
         const optWithFlags = opt as Option & { flags: string[] };
-        const flags = colors.green(optWithFlags.flags.join(", "));
+        const flags = c.green(optWithFlags.flags.join(", "));
         const desc = opt.description || "";
         cmdRows.push([`${"  ".repeat(2 + indent)}${flags}`, desc]);
       }
@@ -95,6 +133,7 @@ export function generateHelp(command: Command): string {
  * A helper function that returns the generateHelp function bound to the command.
  * This is designed to be used with Cliffy's .help() method.
  * 
+ * @param config - Configuration options for the help output. Defaults to `{ colors: true }`.
  * @returns A function that generates help text for the bound command
  * 
  * @example
@@ -111,9 +150,9 @@ export function generateHelp(command: Command): string {
  * // Now --help will show the flat help with all subcommands
  * ```
  */
-export function flatHelp(): (this: Command) => string {
+export function flatHelp(config?: FlatHelpConfig): (this: Command) => string {
   return function(this: Command): string {
-    return generateHelp(this);
+    return generateHelp(this, config);
   };
 }
 

@@ -24,6 +24,20 @@ npm install @cliffy/command @cliffy/table
 
 Use the `flatHelp()` helper function in the `help()` function of your top-level command.
 
+### Configuration
+
+The `flatHelp()` function accepts an optional configuration object:
+
+```typescript
+interface FlatHelpConfig {
+  /**
+   * Whether to use colors in the help output.
+   * Defaults to true.
+   */
+  colors?: boolean;
+}
+```
+
 ### Example
 
 A runnable example (`npm run example -- --help`) is available at [examples/todo-cli.ts]([examples/todo-cli.t](https://github.com/simon-duchastel/cliffy-flat-help/blob/main/examples/todo-cli.ts)s).

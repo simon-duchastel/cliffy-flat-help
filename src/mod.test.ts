@@ -184,4 +184,49 @@ Commands:
 
     expect(helpText).toBe(expected);
   });
+
+  it('should disable colors when colors config is false', () => {
+    colors.setColorEnabled(true);
+    
+    const cmd = new Command()
+      .name('test-cli')
+      .description('Test CLI')
+      .command('sub', new Command().description('Subcommand'));
+
+    const helpText = generateHelp(cmd, { colors: false });
+
+    // Should not contain ANSI color codes
+    expect(helpText).not.toContain('\x1b[');
+    expect(helpText).toContain('Usage: test-cli [options] [command]');
+    expect(helpText).toContain('Commands:');
+  });
+
+  it('should enable colors by default when no config is provided', () => {
+    colors.setColorEnabled(true);
+    
+    const cmd = new Command()
+      .name('test-cli')
+      .description('Test CLI')
+      .command('sub', new Command().description('Subcommand'));
+
+    const helpText = generateHelp(cmd);
+
+    // Should contain ANSI color codes
+    expect(helpText).toContain('\x1b[');
+  });
+
+  it('should enable colors when colors config is true', () => {
+    colors.setColorEnabled(true);
+    
+    const cmd = new Command()
+      .name('test-cli')
+      .description('Test CLI')
+      .command('sub', new Command().description('Subcommand'));
+
+    const helpText = generateHelp(cmd, { colors: true });
+
+    // Should contain ANSI color codes
+    expect(helpText).toContain('\x1b[');
+  });
+
 });
