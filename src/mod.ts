@@ -2,6 +2,31 @@ import { Table } from "@cliffy/table";
 import type { Command, Argument, Option } from "@cliffy/command";
 
 /**
+ * Recursively collects all commands with their full path names.
+ * For example, a command 'sub' nested under 'child' will be named 'child sub'.
+ */
+function collectAllCommands(
+  command: Command,
+  prefix: string = "",
+  result: Array<{ cmd: Command; fullName: string; indent: number }> = []
+): Array<{ cmd: Command; fullName: string; indent: number }> {
+  const commands = command.getCommands();
+  
+  for (const cmd of commands) {
+    const name = cmd.getName();
+    const fullName = prefix ? `${prefix} ${name}` : name;
+    const indent = prefix ? 2 : 0;
+    
+    result.push({ cmd, fullName, indent });
+    
+    // Recursively collect nested commands
+    collectAllCommands(cmd, fullName, result);
+  }
+  
+  return result;
+}
+
+/**
  * Generates a flat help text for a Cliffy command that includes all subcommands,
  * their arguments, and options in one comprehensive view.
  * 
@@ -33,19 +58,19 @@ export function generateHelp(command: Command): string {
   lines.push("");
   lines.push(command.getDescription() || "");
   
-  const allCommands = command.getCommands();
+  const allCommands = collectAllCommands(command);
+  
   if (allCommands.length > 0) {
     lines.push("");
     lines.push("Commands:");
     const cmdRows: string[][] = [];
   
-    for (const cmd of allCommands) {
-      const name = cmd.getName();
+    for (const { cmd, fullName, indent } of allCommands) {
       const args = cmd.getArguments()
         .map((arg: Argument & { optional?: boolean }) => arg.optional ? `[${arg.name}]` : `<${arg.name}>`)
         .join(" ");
     
-      cmdRows.push([`  ${name} ${args}`, cmd.getDescription()]);
+      cmdRows.push([`${"  ".repeat(1 + indent / 2)}${fullName} ${args}`, cmd.getDescription()]);
     
       const arguments_ = cmd.getArguments();
       for (const arg of arguments_) {
@@ -53,7 +78,7 @@ export function generateHelp(command: Command): string {
         const argStr = argOptional ? `[${arg.name}]` : `<${arg.name}>`;
         const description = arg.description ? ` ${arg.description}` : "";
         const requiredText = argOptional ? "(Optional)" : "(Required)";
-        cmdRows.push([`    ${argStr}`, requiredText + (description || "")]);
+        cmdRows.push([`${"  ".repeat(2 + indent / 2)}${argStr}`, requiredText + (description || "")]);
       }
 
       const opts = cmd.getOptions();
@@ -61,7 +86,7 @@ export function generateHelp(command: Command): string {
         const optWithFlags = opt as Option & { flags: string[] };
         const flags = optWithFlags.flags.join(", ");
         const desc = opt.description || "";
-        cmdRows.push([`    ${flags}`, desc]);
+        cmdRows.push([`${"  ".repeat(2 + indent / 2)}${flags}`, desc]);
       }
       
       cmdRows.push(["", ""]);

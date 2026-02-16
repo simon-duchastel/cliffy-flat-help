@@ -118,7 +118,7 @@ Commands:
     expect(helpText).toBe(expected);
   });
 
-  it('should handle nested commands (only shows direct children)', () => {
+  it('should handle nested commands recursively', () => {
     const nestedCmd = new Command()
       .name('nested')
       .description('Nested command')
@@ -136,7 +136,9 @@ Commands:
 Parent CLI
 
 Commands:
-  child  Nested command`;
+  child        Nested command
+                             
+    child sub  Subcommand    `;
 
     expect(helpText).toBe(expected);
   });
