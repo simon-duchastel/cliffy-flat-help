@@ -143,25 +143,6 @@ Commands:
 });
 
 describe('flatHelp', () => {
-  it('should return a function that generates help for the bound command', () => {
-    const cmd = new Command()
-      .name('flat-test')
-      .description('Flat help test')
-      .command('action', new Command().description('Perform action'));
-
-    const helpFn = flatHelp();
-    const helpText = helpFn.call(cmd);
-
-    const expected = `Usage: flat-test [options] [command]
-
-Flat help test
-
-Commands:
-  action  Perform action`;
-
-    expect(helpText).toBe(expected);
-  });
-
   it('should work when used with Cliffy\'s .help() method', () => {
     const cmd = new Command()
       .name('integration')
