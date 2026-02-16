@@ -2,27 +2,23 @@ import { Table } from "@cliffy/table";
 import type { Command, Argument, Option } from "@cliffy/command";
 
 /**
- * Recursively collects all commands with their full path names.
- * For example, a command 'sub' nested under 'child' will be named 'child sub'.
+ * Recursively collects all commands with their depth level.
+ * Each command is shown with its name only (not full path), at the appropriate indentation.
  */
 function collectAllCommands(
   command: Command,
-  prefix: string = "",
-  result: Array<{ cmd: Command; fullName: string; indent: number }> = []
-): Array<{ cmd: Command; fullName: string; indent: number }> {
+  depth: number = 0,
+  result: Array<{ cmd: Command; depth: number }> = []
+): Array<{ cmd: Command; depth: number }> {
   const commands = command.getCommands();
-  
+
   for (const cmd of commands) {
-    const name = cmd.getName();
-    const fullName = prefix ? `${prefix} ${name}` : name;
-    const indent = prefix ? 2 : 0;
-    
-    result.push({ cmd, fullName, indent });
-    
-    // Recursively collect nested commands
-    collectAllCommands(cmd, fullName, result);
+    result.push({ cmd, depth });
+
+    // Recursively collect nested commands with increased depth
+    collectAllCommands(cmd, depth + 1, result);
   }
-  
+
   return result;
 }
 
@@ -55,20 +51,22 @@ export function generateHelp(command: Command): string {
     lines.push("Commands:");
     const cmdRows: string[][] = [];
   
-    for (const { cmd, fullName, indent } of allCommands) {
+    for (const { cmd, depth } of allCommands) {
+      const name = cmd.getName();
       const args = cmd.getArguments()
         .map((arg: Argument & { optional?: boolean }) => arg.optional ? `[${arg.name}]` : `<${arg.name}>`)
         .join(" ");
-    
-      cmdRows.push([`${"  ".repeat(1 + indent / 2)}${fullName} ${args}`, cmd.getDescription()]);
-    
+
+      const indent = depth * 2;
+      cmdRows.push([`${"  ".repeat(1 + indent)}${name} ${args}`, cmd.getDescription()]);
+
       const arguments_ = cmd.getArguments();
       for (const arg of arguments_) {
         const argOptional = (arg as Argument & { optional?: boolean }).optional;
         const argStr = argOptional ? `[${arg.name}]` : `<${arg.name}>`;
         const description = arg.description ? ` ${arg.description}` : "";
         const requiredText = argOptional ? "(Optional)" : "(Required)";
-        cmdRows.push([`${"  ".repeat(2 + indent / 2)}${argStr}`, requiredText + (description || "")]);
+        cmdRows.push([`${"  ".repeat(2 + indent)}${argStr}`, requiredText + (description || "")]);
       }
 
       const opts = cmd.getOptions();
@@ -76,9 +74,9 @@ export function generateHelp(command: Command): string {
         const optWithFlags = opt as Option & { flags: string[] };
         const flags = optWithFlags.flags.join(", ");
         const desc = opt.description || "";
-        cmdRows.push([`${"  ".repeat(2 + indent / 2)}${flags}`, desc]);
+        cmdRows.push([`${"  ".repeat(2 + indent)}${flags}`, desc]);
       }
-      
+
       cmdRows.push(["", ""]);
     }
     cmdRows.pop();

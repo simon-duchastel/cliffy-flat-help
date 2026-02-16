@@ -136,9 +136,9 @@ Commands:
 Parent CLI
 
 Commands:
-  child        Nested command
-                             
-    child sub  Subcommand    `;
+  child    Nested command
+                         
+      sub  Subcommand    `;
 
     expect(helpText).toBe(expected);
   });
