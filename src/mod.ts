@@ -40,16 +40,6 @@ function collectAllCommands(
  * ```typescript
  * import { Command } from "@cliffy/command";
  * import { generateHelp } from "cliffy-flat-help";
- * 
- * const cmd = new Command()
- *   .name("my-cli")
- *   .description("My CLI tool")
- *   .command("init", new Command()
- *     .description("Initialize project")
- *     .arguments("<name>"));
- * 
- * console.log(generateHelp(cmd));
- * ```
  */
 export function generateHelp(command: Command): string {
   const lines: string[] = [];
