@@ -1,19 +1,6 @@
 import { Table } from "@cliffy/table";
+import { colors } from "@cliffy/ansi/colors";
 import type { Command, Argument, Option } from "@cliffy/command";
-
-// ANSI color codes
-const colors = {
-  reset: "\x1b[0m",
-  bold: "\x1b[1m",
-  dim: "\x1b[2m",
-  cyan: "\x1b[36m",
-  green: "\x1b[32m",
-  yellow: "\x1b[33m",
-  blue: "\x1b[34m",
-  magenta: "\x1b[35m",
-  red: "\x1b[31m",
-  gray: "\x1b[90m",
-};
 
 /**
  * Recursively collects all commands with their depth level.
@@ -47,7 +34,7 @@ function collectAllCommands(
 export function generateHelp(command: Command): string {
   const lines: string[] = [];
   
-  lines.push(`${colors.bold}${colors.cyan}Usage:${colors.reset} ${colors.bold}${colors.yellow}${command.getName()}${colors.reset} [options] [command]`);
+  lines.push(`${colors.bold.cyan("Usage:")} ${colors.bold.yellow(command.getName())} [options] [command]`);
   lines.push("");
   lines.push(command.getDescription() || "");
   
@@ -55,7 +42,7 @@ export function generateHelp(command: Command): string {
   
   if (allCommands.length > 0) {
     lines.push("");
-    lines.push(`${colors.bold}${colors.cyan}Commands:${colors.reset}`);
+    lines.push(colors.bold.cyan("Commands:"));
     const cmdRows: string[][] = [];
   
     for (const { cmd, depth } of allCommands) {
@@ -63,34 +50,34 @@ export function generateHelp(command: Command): string {
       const args = cmd.getArguments()
         .map((arg: Argument & { optional?: boolean }) => {
           if (arg.optional) {
-            return `${colors.gray}[${arg.name}]${colors.reset}`;
+            return colors.gray(`[${arg.name}]`);
           } else {
-            return `${colors.magenta}<${arg.name}>${colors.reset}`;
+            return colors.magenta(`<${arg.name}>`);
           }
         })
         .join(" ");
 
       const indent = depth * 2;
-      const cmdNameColored = `${colors.bold}${colors.yellow}${name}${colors.reset}`;
+      const cmdNameColored = colors.bold.yellow(name);
       cmdRows.push([`${"  ".repeat(1 + indent)}${cmdNameColored} ${args}`, cmd.getDescription()]);
 
       const arguments_ = cmd.getArguments();
       for (const arg of arguments_) {
         const argOptional = (arg as Argument & { optional?: boolean }).optional;
         const argStr = argOptional 
-          ? `${colors.gray}[${arg.name}]${colors.reset}` 
-          : `${colors.magenta}<${arg.name}>${colors.reset}`;
+          ? colors.gray(`[${arg.name}]`) 
+          : colors.magenta(`<${arg.name}>`);
         const description = arg.description ? ` ${arg.description}` : "";
         const requiredText = argOptional 
-          ? `${colors.gray}(Optional)${colors.reset}` 
-          : `${colors.red}(Required)${colors.reset}`;
+          ? colors.gray("(Optional)") 
+          : colors.red("(Required)");
         cmdRows.push([`${"  ".repeat(2 + indent)}${argStr}`, requiredText + (description || "")]);
       }
 
       const opts = cmd.getOptions();
       for (const opt of opts) {
         const optWithFlags = opt as Option & { flags: string[] };
-        const flags = `${colors.green}${optWithFlags.flags.join(", ")}${colors.reset}`;
+        const flags = colors.green(optWithFlags.flags.join(", "));
         const desc = opt.description || "";
         cmdRows.push([`${"  ".repeat(2 + indent)}${flags}`, desc]);
       }
