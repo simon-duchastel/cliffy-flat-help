@@ -24,6 +24,20 @@ npm install @cliffy/command @cliffy/table
 
 Use the `flatHelp()` helper function in the `help()` function of your top-level command.
 
+### Configuration
+
+The `flatHelp()` function accepts an optional configuration object:
+
+```typescript
+interface FlatHelpConfig {
+  /**
+   * Whether to use colors in the help output.
+   * Defaults to true.
+   */
+  colors?: boolean;
+}
+```
+
 ### Example
 
 A runnable example (`npm run example -- --help`) is available at [examples/todo-cli.ts]([examples/todo-cli.t](https://github.com/simon-duchastel/cliffy-flat-help/blob/main/examples/todo-cli.ts)s).
@@ -54,6 +68,21 @@ const cli = new Command()
   );
 
 await cli.parse();
+```
+
+#### Disabling Colors
+
+You can disable colored output by passing `{ colors: false }` to `flatHelp()`:
+
+```typescript
+const cli = new Command()
+  .name("my-cli")
+  .description("My awesome CLI tool")
+  .version("1.0.0")
+  .help(flatHelp({ colors: false }))  // Disable colors
+  .command("init", new Command()
+    .description("Initialize a new project")
+  );
 ```
 
 When you run `my-cli --help`, you'll see:
