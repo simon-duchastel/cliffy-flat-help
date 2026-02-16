@@ -1,9 +1,22 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Command } from '@cliffy/command';
+import { colors } from '@cliffy/ansi/colors';
 import { generateHelp, flatHelp } from './mod.js';
 
 describe('generateHelp', () => {
-  it('should generate help text', () => {
+  // Disable colors by default for simpler test assertions
+  beforeEach(() => {
+    colors.setColorEnabled(false);
+  });
+
+  afterEach(() => {
+    colors.setColorEnabled(true);
+  });
+
+  it('should generate help text with colors', () => {
+    // Re-enable colors for this test
+    colors.setColorEnabled(true);
+    
     const cmd = new Command()
       .name('test-cli')
       .description('Test CLI')
@@ -19,17 +32,17 @@ describe('generateHelp', () => {
 
     const helpText = generateHelp(cmd);
 
-    const expected = `Usage: test-cli [options] [command]
+    const expected = `\x1b[36m\x1b[1mUsage:\x1b[22m\x1b[39m \x1b[33m\x1b[1mtest-cli\x1b[22m\x1b[39m [options] [command]
 
 Test CLI
 
-Commands:
-  create <title> [description] Create a task              
-    <title>                    (Required)                 
-    [description]              (Optional) Task description
+\x1b[36m\x1b[1mCommands:\x1b[22m\x1b[39m
+  \x1b[33m\x1b[1mcreate\x1b[22m\x1b[39m \x1b[35m<title>\x1b[39m \x1b[90m[description]\x1b[39m Create a task              
+    \x1b[35m<title>\x1b[39m                    \x1b[31m(Required)\x1b[39m                 
+    \x1b[90m[description]\x1b[39m              \x1b[90m(Optional)\x1b[39m Task description
                                                           
-  list                         List tasks                 
-    -s, --status               Filter by status           `;
+  \x1b[33m\x1b[1mlist\x1b[22m\x1b[39m                         List tasks                 
+    \x1b[32m-s, --status\x1b[39m               Filter by status           `;
 
     expect(helpText).toBe(expected);
   });
@@ -145,6 +158,14 @@ Commands:
 });
 
 describe('flatHelp', () => {
+  beforeEach(() => {
+    colors.setColorEnabled(false);
+  });
+
+  afterEach(() => {
+    colors.setColorEnabled(true);
+  });
+
   it('should work when used with Cliffy\'s .help() method', () => {
     const cmd = new Command()
       .name('integration')
