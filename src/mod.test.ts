@@ -42,7 +42,9 @@ Test CLI
     \x1b[90m[description]\x1b[39m              \x1b[90m(Optional)\x1b[39m Task description
                                                           
   \x1b[33m\x1b[1mlist\x1b[22m\x1b[39m                         List tasks                 
-    \x1b[32m-s, --status\x1b[39m               Filter by status           `;
+    \x1b[32m-s, --status\x1b[39m               Filter by status           
+
+\x1b[90mRun\x1b[39m \x1b[36m\x1b[1m-h\x1b[22m\x1b[39m \x1b[90mor\x1b[39m \x1b[36m\x1b[1m--help\x1b[22m\x1b[39m \x1b[90mto see help.\x1b[39m`;
 
     expect(helpText).toBe(expected);
   });
@@ -57,7 +59,9 @@ Test CLI
 
     const expected = `Usage: simple-cli [options] [command]
 
-Simple CLI with no commands`;
+Simple CLI with no commands
+
+Run -h or --help to see help.`;
 
     expect(helpText).toBe(expected);
   });
@@ -74,7 +78,9 @@ Simple CLI with no commands`;
 
 
 Commands:
-  test  Test command`;
+  test  Test command
+
+Run -h or --help to see help.`;
 
     expect(helpText).toBe(expected);
   });
@@ -100,7 +106,9 @@ Commands:
   copy <source> <destination> [options] Copy files                   
     <source>                            (Required)                   
     <destination>                       (Required) Destination path  
-    [options]                           (Optional) Additional options`;
+    [options]                           (Optional) Additional options
+
+Run -h or --help to see help.`;
 
     expect(helpText).toBe(expected);
   });
@@ -126,7 +134,9 @@ Commands:
   run           Run process      
     -p, --port  Port number      
     -h, --host  Host address     
-    -d, --debug Enable debug mode`;
+    -d, --debug Enable debug mode
+
+Run -h or --help to see help.`;
 
     expect(helpText).toBe(expected);
   });
@@ -151,7 +161,9 @@ Parent CLI
 Commands:
   child    Nested command
                          
-      sub  Subcommand    `;
+      sub  Subcommand    
+
+Run -h or --help to see help.`;
 
     expect(helpText).toBe(expected);
   });
@@ -180,7 +192,9 @@ describe('flatHelp', () => {
 Integration test
 
 Commands:
-  sub  Subcommand`;
+  sub  Subcommand
+
+Run -h or --help to see help.`;
 
     expect(helpText).toBe(expected);
   });
