@@ -115,6 +115,10 @@ export function generateHelp(command: Command, config?: FlatHelpConfig): string 
       const opts = cmd.getOptions();
       for (const opt of opts) {
         const optWithFlags = opt as Option & { flags: string[] };
+        // Filter out help options
+        if (optWithFlags.flags.some((f: string) => f.includes("help"))) {
+          continue;
+        }
         const flags = c.green(optWithFlags.flags.join(", "));
         const desc = opt.description || "";
         cmdRows.push([`${"  ".repeat(2 + indent)}${flags}`, desc]);
@@ -125,6 +129,9 @@ export function generateHelp(command: Command, config?: FlatHelpConfig): string 
     cmdRows.pop();
     lines.push(Table.from(cmdRows).padding(1).toString());
   }
+
+  lines.push("");
+  lines.push(`${c.gray("Run")} ${c.bold.cyan("-h")} ${c.gray("or")} ${c.bold.cyan("--help")} ${c.gray("to see help.")}`);
   
   return lines.join("\n");
 }
