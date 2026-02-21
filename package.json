@@ -18,10 +18,9 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "prepublishOnly": "npm run build && npm test",
-    "example": "tsx examples/todo-cli.ts"
+    "test": "bun test src/mod.test.ts",
+    "prepublishOnly": "bun run build && bun test",
+    "example": "bun examples/todo-cli.ts"
   },
   "keywords": [
     "cliffy",
@@ -39,10 +38,8 @@
     "@cliffy/table": "npm:@jsr/cliffy__table@1.0.0"
   },
   "devDependencies": {
-    "@types/node": "20.19.33",
-    "tsx": "4.21.0",
-    "typescript": "5.9.3",
-    "vitest": "1.6.1"
+    "@types/bun": "latest",
+    "typescript": "5.9.3"
   },
   "repository": {
     "type": "git",

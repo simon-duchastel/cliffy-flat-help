@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { Command } from '@cliffy/command';
 import { colors } from '@cliffy/ansi/colors';
 import { generateHelp, flatHelp } from './mod.js';
